@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer')
 const gunzip = require('gunzip-file')
 const parseFile = require('./utilities/parseFile').parseFile
 const xml2js = require('xml2js')
+const db = require('../config').dbo
 const https = require('https')
 const fs = require('fs')
 

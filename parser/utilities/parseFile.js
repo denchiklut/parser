@@ -1,6 +1,9 @@
 const puppeteer = require('puppeteer')
 const xml2js = require('xml2js')
 const fs = require('fs')
+const Parser = require('../../config').parser
+
+
 
 exports.parseFile = (item) => {
 
@@ -9,8 +12,8 @@ exports.parseFile = (item) => {
 
 
     parser.parseString(content, (err, result) => {
-
-        let arr = result.urlset.url.slice(17005, 17006)
+        //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
+        let arr = result.urlset.url.slice(10005, 10006)
 
         arr.forEach( async (item) => {
 
@@ -29,11 +32,21 @@ exports.parseFile = (item) => {
                         keywords: document.head.querySelector("[name~=keywords][content]").content}
                 })
 
+                var msg = new Parser({mixed: result})
+                msg.save(function (err) {
+                    console.log(err)
+                });
                 console.log(result)
                 browser.close()
 
             } catch (err) {
-                console.log(`ERROR: ${item.loc[0]}`)
+                console.log(`--- ERROR ---: ${item.loc[0]}`)
+                let error = `--- ERROR ---: ${item.loc[0]}`
+
+                var msg = new Parser({text: err})
+                msg.save(function (err) {
+                    if (err) console.log(err)
+                });
             }
         })
 
