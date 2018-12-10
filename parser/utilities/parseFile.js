@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer')
 const xml2js = require('xml2js')
+const proxyList = require('./proxy').proxyList
 const fs = require('fs')
 const Parser = require('../../config').parser
 
@@ -13,11 +14,15 @@ exports.parseFile = (item) => {
 
     parser.parseString(content, (err, result) => {
         //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
-        let arr = result.urlset.url.slice(10005, 10006)
+        let arr = result.urlset.url.slice(10008, 10009)
 
         arr.forEach( async (item) => {
 
             try {
+                let proxy = proxyList[Math.floor(Math.random()*proxyList.length)];
+                console.log('--- rand proxy ---')
+                console.log(proxy)
+                console.log('--- rand proxy ---')
                 const browser = await puppeteer.launch()
                 const page = await browser.newPage()
                 await page.setUserAgent('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)');
