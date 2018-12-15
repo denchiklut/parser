@@ -4,13 +4,10 @@ const proxyList = require('./proxy').proxyList
 const fs = require('fs')
 const Parser = require('../../config').parser
 
-
-
-exports.parseFile = (item) => {
+exports.parseFile = (item, io) => {
 
     const parser = new xml2js.Parser()
     let content = fs.readFileSync(`${item}`, 'utf8')
-
 
     parser.parseString(content, (err, result) => {
         //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
@@ -19,11 +16,10 @@ exports.parseFile = (item) => {
         arr.forEach( async (item) => {
 
             try {
-                let proxy = proxyList[Math.floor(Math.random()*proxyList.length)];
-                console.log('--- rand proxy ---')
-                console.log(proxy)
-                console.log('--- rand proxy ---')
-                const browser = await puppeteer.launch()
+                let proxyUrl = proxyList[Math.floor(Math.random()*proxyList.length)];
+                const browser = await puppeteer.launch({
+                    args: [`--proxy-server=${proxyUrl}`],
+                })
                 const page = await browser.newPage()
                 await page.setUserAgent('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)');
 
@@ -37,23 +33,26 @@ exports.parseFile = (item) => {
                         keywords: document.head.querySelector("[name~=keywords][content]").content}
                 })
 
-                var msg = new Parser({mixed: result})
+                let msg = new Parser({mixed: result})
                 msg.save(function (err) {
-                    console.log(err)
+                    if (err) console.log(err)
                 });
-                console.log(result)
+                io.emit('app-url', {data: result});
+                // console.log(result)
+                console.log(`--- SUCCESS ---: ${item.loc[0]}`)
                 browser.close()
 
             } catch (err) {
-                console.log(`--- ERROR ---: ${item.loc[0]}`)
-                let error = `--- ERROR ---: ${item.loc[0]}`
 
-                var msg = new Parser({text: err})
+                console.log(`---  ERROR ---: ${item.loc[0]}`)
+                let error =`---  ERROR ---: ${item.loc[0]}`
+                io.emit('app-url', {data: error});
+
+                let msg = new Parser({text: err})
                 msg.save(function (err) {
                     if (err) console.log(err)
                 });
             }
         })
-
     })
 }

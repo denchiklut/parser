@@ -2,17 +2,17 @@ const puppeteer = require('puppeteer')
 const gunzip = require('gunzip-file')
 const parseFile = require('./utilities/parseFile').parseFile
 const xml2js = require('xml2js')
-const db = require('../config').dbo
 const https = require('https')
 const fs = require('fs')
 
-const parserFn = async () => {
+const parserFn = async (io) => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     const parser = new xml2js.Parser()
 
     await page.goto('https://www.cian.ru/sitemap.xml')
     const src = await page.evaluate(() => document.getElementById('collapsible0').innerText)
+
 
     parser.parseString(src, (err, result) => {
 
@@ -33,9 +33,11 @@ const parserFn = async () => {
             file.on("finish", () => {
                 let newName = fname.split('.')
                 newName.slice(-1)
+                io.emit('app', {data: `${newName[0]}.${newName[1]}`});
+
                 gunzip(`${dir}/${fname}`, `${dir}/${newName[0]}.${newName[1]}`, () => {
                     fs.unlinkSync(`${dir}/${fname}`)
-                    parseFile(`${dir}/${newName[0]}.${newName[1]}`)
+                    parseFile(`${dir}/${newName[0]}.${newName[1]}`, io)
                 })
             })
 

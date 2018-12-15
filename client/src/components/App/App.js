@@ -1,0 +1,95 @@
+import React, { Component } from 'react'
+import io from 'socket.io-client';
+import axios from 'axios'
+import './App.css'
+import Customers from "../FileList/FileList"
+import Button from "@material-ui/core/Button/Button"
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from "@material-ui/core/Grid";
+
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+    },
+    paper: {
+        padding: theme.spacing.unit * 2,
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    },
+});
+
+class App extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            isStart: false,
+            log: null,
+            socket: null,
+            files: []
+        };
+
+        this.socket = io('localhost:5000');
+
+        this.socket.on('app', function(data){
+            getFiles(data)
+        });
+
+        this.socket.on('app-url', function(data){
+            console.log(data.data)
+        });
+
+        const getFiles = (file) => {
+            this.setState({files: [...this.state.files, file.data]});
+        }
+
+    }
+
+    render() {
+        return (
+            <div className="App-body">
+                <Grid container spacing={24} style={{width: '100%', margin: 0}}>
+                    <Grid item xs={12}>
+                        {this.state.log ? this.state.log: ''}
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <Button
+                            variant="outlined"
+                            size="large"
+                            color="secondary"
+                            onClick={() => this.handleClick()}>
+                            {this.state.isStart ? 'Stop' : 'Start'}
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+
+                        Socket log
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <Customers files={this.state.files}/>
+                    </Grid>
+                </Grid>
+            </div>
+        )
+    }
+
+    handleClick = () => {
+        this.setState({
+            isStart: !this.state.isStart
+        })
+        axios
+            .post(`/api/parser`, {status: this.state.isStart ? 'stop' : 'start'})
+            .then(res => {
+                let log = res.data.msg
+                this.setState({log})
+
+            })
+    }
+
+}
+App.propTypes = {
+    classes: PropTypes.object.isRequired,
+}
+export default withStyles(styles)(App)
