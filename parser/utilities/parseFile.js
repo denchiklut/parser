@@ -33,13 +33,16 @@ exports.parseFile = (item, io) => {
                         keywords: document.head.querySelector("[name~=keywords][content]").content}
                 })
 
+                console.log(`--- SUCCESS ---: ${item.loc[0]}`)
+                let log = `--- SUCCESS ---: ${item.loc[0]}`
+                io.emit('app-url', {data: log});
+                
+                // console.log(result)
                 let msg = new Parser({mixed: result})
                 msg.save(function (err) {
                     if (err) console.log(err)
                 });
-                io.emit('app-url', {data: result});
-                // console.log(result)
-                console.log(`--- SUCCESS ---: ${item.loc[0]}`)
+
                 browser.close()
 
             } catch (err) {

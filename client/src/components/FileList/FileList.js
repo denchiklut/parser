@@ -6,13 +6,13 @@ class FileList extends Component {
         super(props)
 
         this.state = {
-            customers: this.props.files
+            files: this.props.files
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.files !== nextProps.files) {
-            this.setState({customers: nextProps.files})
+            this.setState({files: nextProps.files})
         }
 
     }
@@ -22,8 +22,8 @@ class FileList extends Component {
             <div>
                 <h2>Files</h2>
                 <ul>
-                    {this.state.customers.map(customer =>
-                        <li>{customer} </li>
+                    {this.state.files.map(file =>
+                        <li>{file} </li>
                     )}
                 </ul>
             </div>

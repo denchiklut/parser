@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import io from 'socket.io-client';
 import axios from 'axios'
 import './App.css'
-import Customers from "../FileList/FileList"
+import FileList from "../FileList/FileList"
+import Log from "../Log/Log"
 import Button from "@material-ui/core/Button/Button"
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -28,6 +29,7 @@ class App extends Component {
             isStart: false,
             log: null,
             socket: null,
+            logs: [],
             files: []
         };
 
@@ -38,11 +40,15 @@ class App extends Component {
         });
 
         this.socket.on('app-url', function(data){
-            console.log(data.data)
+            getLogs(data)
         });
 
         const getFiles = (file) => {
             this.setState({files: [...this.state.files, file.data]});
+        }
+
+        const getLogs = (log) => {
+            this.setState({logs: [...this.state.logs, log.data]});
         }
 
     }
@@ -52,9 +58,6 @@ class App extends Component {
             <div className="App-body">
                 <Grid container spacing={24} style={{width: '100%', margin: 0}}>
                     <Grid item xs={12}>
-                        {this.state.log ? this.state.log: ''}
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
                         <Button
                             variant="outlined"
                             size="large"
@@ -62,13 +65,14 @@ class App extends Component {
                             onClick={() => this.handleClick()}>
                             {this.state.isStart ? 'Stop' : 'Start'}
                         </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
 
-                        Socket log
+                        {this.state.log ? this.state.log: ''}
+                    </Grid>
+                    <Grid item xs={12} sm={9}>
+                        <Log logs={this.state.logs}/>
                     </Grid>
                     <Grid item xs={12} sm={3}>
-                        <Customers files={this.state.files}/>
+                        <FileList files={this.state.files}/>
                     </Grid>
                 </Grid>
             </div>
