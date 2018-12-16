@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,7 +14,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import Home from '../Home/Home'
+import Main from '../Main/Main'
+import { Link } from 'react-router-dom';
+import './App.css'
 
 const styles = {
     list: {
@@ -73,18 +74,18 @@ class App extends React.Component {
         );
 
         return (
-            <div className='App-body'>
+            <div>
                 <AppBar position="static" style={{background: 'linear-gradient(to right, #dc2430, #7b4397)'}}>
                     <Toolbar>
                         <IconButton className={classes.menuButton} onClick={this.toggleDrawer('left', true)} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.grow}>
-                            Cian Parser
+                            <Link style={{textDecoration: 'none', color: 'white'}} to="/">Cian Parser</Link>
                         </Typography>
-                        <Button color="inherit">Архив</Button>
-                        <Button color="inherit">Настройки</Button>
-                        <Button color="inherit">Инструкции</Button>
+                        <Link className='App-link' to="/archive">Архив</Link>
+                        <Link className='App-link' to="/settings">Настройки</Link>
+                        <Link className='App-link' to="/instructions">Инструкции</Link>
                     </Toolbar>
                 </AppBar>
                 <SwipeableDrawer
@@ -101,7 +102,7 @@ class App extends React.Component {
                         {sideList}
                     </div>
                 </SwipeableDrawer>
-                <Home/>
+                <Main/>
             </div>
         );
     }
