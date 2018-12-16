@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import './Log.css'
+import Typography from "@material-ui/core/Typography";
+import Toolbar from "@material-ui/core/Toolbar";
+import AppBar from "@material-ui/core/AppBar";
 
 class Log extends Component {
     constructor(props) {
@@ -20,8 +23,14 @@ class Log extends Component {
     render() {
         return (
             <div>
-                <h2>Logs</h2>
-                <ul style={{background: '#111', opacity: '.75'}}>
+                <AppBar style={{background: '#f5f5f5c9'}} position="static" color="default">
+                    <Toolbar>
+                        <Typography variant="h6" color="white">
+                            Logs
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <ul className='LogList'>
                     {this.state.logs.map(log =>
                         <li>{log} </li>
                     )}

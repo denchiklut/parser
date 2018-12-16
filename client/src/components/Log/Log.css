@@ -1,0 +1,14 @@
+.LogList {
+    margin-top: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    opacity: .75;
+    height: 60vh;
+    background: #111;
+    overflow-y: auto;
+    box-shadow: -1px 3px 3px black;
+}
+
+.LogList li {
+    font-size: 14px;
+}

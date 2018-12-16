@@ -12,6 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
 import List from "@material-ui/core/List";
 import FolderIcon from '@material-ui/icons/Folder';
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 
 const styles = theme => ({
@@ -35,7 +37,7 @@ class FileList extends Component {
             checked: [1],
         }
     }
-    
+
     componentWillReceiveProps(nextProps) {
         if (this.props.files !== nextProps.files) {
             this.setState({files: nextProps.files})
@@ -64,11 +66,15 @@ class FileList extends Component {
         return (
             <div className={classes.root}>
                 <Grid item xs={12}>
-                    <Typography variant="h6" className={classes.title}>
-                        Файлы урлов
-                    </Typography>
+                    <AppBar style={{background: 'rgba(219, 36, 48, 0.77)'}} position="static" color="white">
+                        <Toolbar>
+                            <Typography variant="h6" style={{color: "#ffffffd6"}} >
+                                Files of urls
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
                     <div style={{background: 'rgba(255, 255, 255, 0.5)'}}>
-                        <List dense>
+                        <List dense className='fileList'>
                             {this.state.files.map(file =>
                                 <ListItem>
                                     <ListItemAvatar>
