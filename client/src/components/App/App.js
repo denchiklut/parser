@@ -1,99 +1,114 @@
-import React, { Component } from 'react'
-import io from 'socket.io-client';
-import axios from 'axios'
-import './App.css'
-import FileList from "../FileList/FileList"
-import Log from "../Log/Log"
-import Button from "@material-ui/core/Button/Button"
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from "@material-ui/core/Grid";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import Home from '../Home/Home'
 
-
-const styles = theme => ({
+const styles = {
+    list: {
+        width: 250,
+    },
     root: {
         flexGrow: 1,
     },
-    paper: {
-        padding: theme.spacing.unit * 2,
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
+    grow: {
+        flexGrow: 1,
     },
-});
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20,
+    },
+};
 
-class App extends Component {
-    constructor(props){
-        super(props);
+class App extends React.Component {
+    state = {
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    };
 
-        this.state = {
-            isStart: false,
-            log: null,
-            socket: null,
-            logs: [],
-            files: []
-        };
-
-        this.socket = io('localhost:5000');
-
-        this.socket.on('app', function(data){
-            getFiles(data)
+    toggleDrawer = (side, open) => () => {
+        this.setState({
+            [side]: open,
         });
-
-        this.socket.on('app-url', function(data){
-            getLogs(data)
-        });
-
-        const getFiles = (file) => {
-            this.setState({files: [...this.state.files, file.data]});
-        }
-
-        const getLogs = (log) => {
-            this.setState({logs: [...this.state.logs, log.data]});
-        }
-
-    }
+    };
 
     render() {
-        return (
-            <div className="App-body">
-                <Grid container spacing={24} style={{width: '100%', margin: 0}}>
-                    <Grid item xs={12}>
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            color="secondary"
-                            onClick={() => this.handleClick()}>
-                            {this.state.isStart ? 'Stop' : 'Start'}
-                        </Button>
+        const { classes } = this.props;
 
-                        {this.state.log ? this.state.log: ''}
-                    </Grid>
-                    <Grid item xs={12} sm={9}>
-                        <Log logs={this.state.logs}/>
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                        <FileList files={this.state.files}/>
-                    </Grid>
-                </Grid>
+        const sideList = (
+            <div className={classes.list}>
+                <List>
+                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                        <ListItem button key={text}>
+                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItem>
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                        <ListItem button key={text}>
+                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItem>
+                    ))}
+                </List>
             </div>
-        )
+        );
+
+        return (
+            <div className='App-body'>
+                <AppBar position="static" style={{background: 'linear-gradient(to right, #dc2430, #7b4397)'}}>
+                    <Toolbar>
+                        <IconButton className={classes.menuButton} onClick={this.toggleDrawer('left', true)} color="inherit" aria-label="Menu">
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" color="inherit" className={classes.grow}>
+                            Cian Parser
+                        </Typography>
+                        <Button color="inherit">Архив</Button>
+                        <Button color="inherit">Настройки</Button>
+                        <Button color="inherit">Инструкции</Button>
+                    </Toolbar>
+                </AppBar>
+                <SwipeableDrawer
+                    open={this.state.left}
+                    onClose={this.toggleDrawer('left', false)}
+                    onOpen={this.toggleDrawer('left', true)}
+                >
+                    <div
+                        tabIndex={0}
+                        role="button"
+                        onClick={this.toggleDrawer('left', false)}
+                        onKeyDown={this.toggleDrawer('left', false)}
+                    >
+                        {sideList}
+                    </div>
+                </SwipeableDrawer>
+                <Home/>
+            </div>
+        );
     }
-
-    handleClick = () => {
-        this.setState({
-            isStart: !this.state.isStart
-        })
-        axios
-            .post(`/api/parser`, {status: this.state.isStart ? 'stop' : 'start'})
-            .then(res => {
-                let log = res.data.msg
-                this.setState({log})
-
-            })
-    }
-
 }
+
 App.propTypes = {
     classes: PropTypes.object.isRequired,
-}
-export default withStyles(styles)(App)
+};
+
+export default withStyles(styles)(App);

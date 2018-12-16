@@ -21,7 +21,7 @@ class Log extends Component {
         return (
             <div>
                 <h2>Logs</h2>
-                <ul>
+                <ul style={{background: '#111', opacity: '.75'}}>
                     {this.state.logs.map(log =>
                         <li>{log} </li>
                     )}
