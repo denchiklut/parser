@@ -8,15 +8,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import Main from '../Main/Main'
 import { Link } from 'react-router-dom';
 import './App.css'
+import Hidden from "@material-ui/core/Hidden";
+import ListSubheader from "@material-ui/core/ListSubheader";
 
 const styles = {
     list: {
@@ -53,22 +51,29 @@ class App extends React.Component {
 
         const sideList = (
             <div className={classes.list}>
-                <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
+                <List
+                    component="nav"
+                    subheader={
+                        <ListSubheader component="div">
+                        <ListItemText>
+                            <Link className='App-link' style={{color: '#1e1e1e'}} to="/"><h1>Главная</h1></Link>
+                        </ListItemText>
+                    </ListSubheader>}>
+                    <ListItem button>
+                        <ListItemText >
+                            <Link className='App-link'  style={{color: '#1e1e1e'}} to="/archive">Архив</Link>
+                        </ListItemText>
+                    </ListItem>
+                    <ListItem button>
+                        <ListItemText>
+                            <Link className='App-link' style={{color: '#1e1e1e'}} to="/settings">Настройки</Link>
+                        </ListItemText>
+                    </ListItem>
+                    <ListItem button>
+                        <ListItemText>
+                            <Link className='App-link'  style={{color: '#1e1e1e'}} to="/instructions">Инструкции</Link>
+                        </ListItemText>
+                    </ListItem>
                 </List>
             </div>
         );
@@ -83,9 +88,11 @@ class App extends React.Component {
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             <Link style={{textDecoration: 'none', color: 'white'}} to="/">Cian Parser</Link>
                         </Typography>
-                        <Link className='App-link' to="/archive">Архив</Link>
-                        <Link className='App-link' to="/settings">Настройки</Link>
-                        <Link className='App-link' to="/instructions">Инструкции</Link>
+                        <Hidden smDown>
+                            <Link className='App-link' to="/archive">Архив</Link>
+                            <Link className='App-link' to="/settings">Настройки</Link>
+                            <Link className='App-link' to="/instructions">Инструкции</Link>
+                        </Hidden>
                     </Toolbar>
                 </AppBar>
                 <SwipeableDrawer

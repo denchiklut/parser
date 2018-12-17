@@ -11,7 +11,9 @@ const db = mongoose.connection;
 
 // Привязать подключение к ошибке события ( получение уведомления ошибок подключение )
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
+db.once('open', function() {
+    console.log('MongoDb connected')
+});
 //Define a schema
 const Schema = mongoose.Schema;
 

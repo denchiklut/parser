@@ -4,10 +4,10 @@ import axios from 'axios'
 import './Home.css'
 import FileList from "../FileList/FileList"
 import Log from "../Log/Log"
-import Button from "@material-ui/core/Button/Button"
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
+import Fab from "@material-ui/core/Fab";
 
 
 const styles = theme => ({
@@ -58,13 +58,13 @@ class Home extends Component {
             <div className="App-body">
                 <Grid container spacing={24} style={{width: '100%', margin: 0}}>
                     <Grid item xs={12}>
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            color="primary"
+                        <Fab
+                            variant="extended"
+                            aria-label="Delete"
+                            className='fab'
                             onClick={() => this.handleClick()}>
                             {this.state.isStart ? 'Stop' : 'Start'}
-                        </Button>
+                        </Fab>
 
                         {this.state.log ? this.state.log: ''}
                     </Grid>

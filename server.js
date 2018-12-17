@@ -19,7 +19,6 @@ app.post('/api/parser', jsonParser, (req, res) => {
     if (!req.body) return res.sendStatus(400)
     if (req.body.status === 'start') {
         res.json({msg: 'We are starting parser'})
-
         parseFn(io)
     } else {
         res.json({msg: 'We are stopping parser'})
