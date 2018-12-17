@@ -83,7 +83,7 @@ class FileList extends Component {
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={file}
+                                        primary={<a href='#' className='fileName'>{file}</a>}
                                         secondary='Число урлов'
                                     />
                                     <ListItemSecondaryAction>
