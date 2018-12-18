@@ -5,7 +5,7 @@ const xml2js = require('xml2js')
 const https = require('https')
 const fs = require('fs')
 
-const parserFn = async (io) => {
+const parserFn = async (dirName, io) => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     const parser = new xml2js.Parser()
@@ -36,7 +36,7 @@ const parserFn = async (io) => {
 
                 gunzip(`${dir}/${fname}`, `${dir}/${newName[0]}.${newName[1]}`, () => {
                     fs.unlinkSync(`${dir}/${fname}`)
-                    parseFile(`${dir}/${newName[0]}.${newName[1]}`, io)
+                    parseFile(dirName,`${dir}/${newName[0]}.${newName[1]}`, io)
                 })
             })
 

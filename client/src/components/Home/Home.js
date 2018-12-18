@@ -4,17 +4,8 @@ import axios from 'axios'
 import './Home.css'
 import FileList from "../FileList/FileList"
 import Log from "../Log/Log"
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
-
-
-const styles = theme => ({
-    root: {
-        flexGrow: 1,
-    },
-});
 
 class Home extends Component {
     constructor(props){
@@ -86,9 +77,6 @@ class Home extends Component {
 
             })
     }
+}
 
-}
-Home.propTypes = {
-    classes: PropTypes.object.isRequired,
-}
-export default withStyles(styles)(Home)
+export default Home
