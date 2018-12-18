@@ -2,6 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const socket = require('socket.io')
 const parseFn = require('./parser/app')
+const PageData = require('./config').pageData
+
 
 const app = express()
 const port = 5000
@@ -23,6 +25,16 @@ app.post('/api/parser', jsonParser, (req, res) => {
     } else {
         res.json({msg: 'We are stopping parser'})
     }
+})
+
+app.get('/api/data', (req, res)=> {
+    PageData.find({}).exec(function (err, data) {
+        let arr = []
+        data.map(item => {
+            arr.push(item.pageData)
+        })
+       res.json({data: arr})
+    })
 })
 
 

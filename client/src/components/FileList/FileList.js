@@ -66,7 +66,7 @@ class FileList extends Component {
         return (
             <div className={classes.root}>
                 <Grid item xs={12}>
-                    <AppBar style={{background: 'rgba(219, 36, 48, 0.77)'}} position="static" color="white">
+                    <AppBar style={{background: 'rgba(219, 36, 48, 0.77)'}} position="static">
                         <Toolbar>
                             <Typography variant="h6" style={{color: "#ffffffd6"}} >
                                 Files of urls
@@ -83,7 +83,7 @@ class FileList extends Component {
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={<a href='#' className='fileName'>{file}</a>}
+                                        primary={<a href='/' className='fileName'>{file}</a>}
                                         secondary='Число урлов'
                                     />
                                     <ListItemSecondaryAction>

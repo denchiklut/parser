@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import './Settings.css'
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -27,7 +26,7 @@ class Settings extends Component {
                 <div className="settings-body">
                     <Grid container spacing={24} style={{width: '100%', margin: 0}}>
                         <Grid item xs={12}>
-                           <h3>Основные настройки приложения</h3>
+                           <h2>Основные настройки приложения</h2>
                             <hr/>
                         </Grid>
                         <Grid item xs={12} sm={6}>

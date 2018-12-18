@@ -25,7 +25,7 @@ class Log extends Component {
             <div>
                 <AppBar style={{background: '#f5f5f5c9'}} position="static" color="default">
                     <Toolbar>
-                        <Typography variant="h6" color="white">
+                        <Typography variant="h6">
                             Logs
                         </Typography>
                     </Toolbar>

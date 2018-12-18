@@ -2,7 +2,8 @@ const puppeteer = require('puppeteer')
 const xml2js = require('xml2js')
 const proxyList = require('./proxy').proxyList
 const fs = require('fs')
-const Parser = require('../../config').parser
+const PageData = require('../../config').pageData
+const ErrorData = require('../../config').errorData
 
 exports.parseFile = (item, io) => {
 
@@ -11,7 +12,7 @@ exports.parseFile = (item, io) => {
 
     parser.parseString(content, (err, result) => {
         //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
-        let arr = result.urlset.url.slice(10008, 10009)
+        let arr = result.urlset.url.slice(12308, 12309)
 
         arr.forEach( async (item) => {
 
@@ -38,11 +39,10 @@ exports.parseFile = (item, io) => {
                 io.emit('app-url', {data: log});
                 
                 // console.log(result)
-                let msg = new Parser({mixed: result})
+                let msg = new PageData({pageData: result})
                 msg.save(function (err) {
                     if (err) console.log(err)
                 });
-
                 browser.close()
 
             } catch (err) {
@@ -51,7 +51,7 @@ exports.parseFile = (item, io) => {
                 let error =`---  ERROR ---: ${item.loc[0]}`
                 io.emit('app-url', {data: error});
 
-                let msg = new Parser({text: err})
+                let msg = new ErrorData({text: err})
                 msg.save(function (err) {
                     if (err) console.log(err)
                 });
