@@ -32,7 +32,10 @@ class Archive extends React.Component {
         const data = this.state.data
         const options = {
             filterType: "dropdown",
-            responsive: "scroll"
+            responsive: "scroll",
+            selectableRows: false,
+            rowsPerPage: 5,
+            rowsPerPageOptions: [5, 25, 100],
         };
 
         return (
