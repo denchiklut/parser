@@ -83,8 +83,8 @@ class FileList extends Component {
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={<a href='/' className='fileName'>{file}</a>}
-                                        secondary='Число урлов'
+                                        primary={<a href='/' className='fileName'>{file.title.split('/').reverse()[0]}</a>}
+                                        secondary={<span> Урлов: {file.count}</span>}
                                     />
                                     <ListItemSecondaryAction>
                                         <Checkbox

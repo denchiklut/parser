@@ -12,7 +12,9 @@ exports.parseFile = (item, io) => {
 
     parser.parseString(content, (err, result) => {
         //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
-        let arr = result.urlset.url.slice(12308, 12309)
+        let arr = result.urlset.url.slice(180, 181)
+
+        io.emit('app', {data: {title: `${item}`, count: `${result.urlset.url.length}`}});
 
         arr.forEach( async (item) => {
 

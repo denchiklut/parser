@@ -33,7 +33,6 @@ const parserFn = async (io) => {
             file.on("finish", () => {
                 let newName = fname.split('.')
                 newName.slice(-1)
-                io.emit('app', {data: `${newName[0]}.${newName[1]}`});
 
                 gunzip(`${dir}/${fname}`, `${dir}/${newName[0]}.${newName[1]}`, () => {
                     fs.unlinkSync(`${dir}/${fname}`)
