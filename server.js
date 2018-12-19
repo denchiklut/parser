@@ -3,6 +3,9 @@ const bodyParser = require('body-parser')
 const socket = require('socket.io')
 const parseFn = require('./parser/app')
 const PageData = require('./config').pageData
+const LogData = require('./config').logData
+const LogFileData = require('./config').logFileData
+const StatusData = require('./config').statusData
 
 
 const app = express()
@@ -21,6 +24,18 @@ app.post('/api/parser', jsonParser, (req, res) => {
     if (!req.body) return res.sendStatus(400)
     if (req.body.status === 'start') {
         res.json({msg: 'We are starting parser'})
+        StatusData.remove({}, function(err) {
+            if (err) console.log(err)
+            console.log('statusData collection removed')
+        });
+        LogData.remove({}, function(err) {
+            if (err) console.log(err)
+            console.log('logData collection removed')
+        });
+        LogFileData.remove({}, function(err) {
+            if (err) console.log(err)
+            console.log('logFile collection removed')
+        });
         parseFn(__dirname, io)
     } else {
         res.json({msg: 'We are stopping parser'})
@@ -34,6 +49,32 @@ app.get('/api/data', (req, res)=> {
             arr.push(item.pageData)
         })
        res.json({data: arr})
+    })
+})
+
+app.get('/api/logs', (req, res)=> {
+    LogData.find({}).exec(function (err, data) {
+        let arr = []
+        data.map(item => {
+            arr.push(item)
+        })
+        res.json({data: arr})
+    })
+})
+
+app.get('/api/status', (req, res)=> {
+    StatusData.find({}).exec(function (err, data) {
+        res.json({data: data})
+    })
+})
+
+app.get('/api/logFile', (req, res)=> {
+    LogFileData.find({}).exec(function (err, data) {
+        let arr = []
+        data.map(item => {
+            arr.push(item)
+        })
+        res.json({data: arr})
     })
 })
 

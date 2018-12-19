@@ -39,6 +39,35 @@ class Home extends Component {
 
     }
 
+    componentDidMount() {
+        axios
+            .get('/api/status')
+            .then(res => {
+                this.setState({isStart: res.data.data[0].status})
+            })
+
+        axios
+            .get('/api/logs')
+            .then(res => {
+                if (res.data.data.length > 0 ) {
+                    res.data.data.map(item => {
+                        this.setState({logs: [...this.state.logs, item.log]});
+                    })
+                }
+            })
+
+        axios
+            .get('/api/logFile')
+            .then(res => {
+                if (res.data.data.length > 0 ) {
+                    res.data.data.map(item => {
+                        let obj = {title: item.title, count: item.size}
+                        this.setState({files: [...this.state.files, obj]});
+                    })
+                }
+            })
+    }
+
     render() {
         return (
             <div className="App-body">
@@ -75,6 +104,10 @@ class Home extends Component {
                 let log = res.data.msg
                 this.setState({log})
 
+                if (this.state.isStart) {
+                    this.setState({logs: []})
+                    this.setState({files: []})
+                }
             })
     }
 }

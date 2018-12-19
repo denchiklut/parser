@@ -2,10 +2,22 @@ const puppeteer = require('puppeteer')
 const gunzip = require('gunzip-file')
 const parseFile = require('./utilities/parseFile').parseFile
 const xml2js = require('xml2js')
+const StatusData = require('../config').statusData
 const https = require('https')
 const fs = require('fs')
 
 const parserFn = async (dirName, io) => {
+    /*
+        Пока поместим запись комнаты открытого socket подключения в начало функции
+    */
+
+   //Пишем в БД что пасрер запущен
+    let status = new StatusData({status: true})
+    status.save(function(err) {
+        if (err) console.log(err)
+    })
+
+
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     const parser = new xml2js.Parser()

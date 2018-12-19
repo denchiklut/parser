@@ -4,6 +4,8 @@ const proxyList = require('./proxy').proxyList
 const fs = require('fs')
 const PageData = require('../../config').pageData
 const ErrorData = require('../../config').errorData
+const LogData = require('../../config').logData
+const LogFileData = require('../../config').logFileData
 
 exports.parseFile = (rootDir, item, io) => {
 
@@ -13,6 +15,12 @@ exports.parseFile = (rootDir, item, io) => {
     parser.parseString(content, (err, result) => {
         //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
         let arr = result.urlset.url.slice(180, 181)
+
+        //Пишем в БД лог файлов с урлами
+        let logFileData = new LogFileData({title: `${rootDir}/${item}`, size: `${result.urlset.url.length}`})
+        logFileData.save(function (err) {
+            if (err) console.log(err)
+        })
 
         io.emit('app', {data: {title: `${rootDir}/${item}`, count: `${result.urlset.url.length}`}});
 
@@ -36,11 +44,16 @@ exports.parseFile = (rootDir, item, io) => {
                         keywords: document.head.querySelector("[name~=keywords][content]").content}
                 })
 
-                console.log(`--- SUCCESS ---: ${item.loc[0]}`)
                 let log = `--- SUCCESS ---: ${item.loc[0]}`
+                //Пишем в БД логи парсера
+                let logData = new LogData({log: log})
+                logData.save(function (err) {
+                    if (err) console.log(err)
+                });
+
                 io.emit('app-url', {data: log});
-                
-                // console.log(result)
+
+                //Пишем в БД результаты работы парсера
                 let msg = new PageData({pageData: result})
                 msg.save(function (err) {
                     if (err) console.log(err)
@@ -49,10 +62,15 @@ exports.parseFile = (rootDir, item, io) => {
 
             } catch (err) {
 
-                console.log(`---  ERROR ---: ${item.loc[0]}`)
                 let error =`---  ERROR ---: ${item.loc[0]}`
-                io.emit('app-url', {data: error});
+                //Пишем в БД лог ошибки
+                let errorData = new LogData({log: error})
+                errorData.save(function (err) {
+                    if (err) console.log(err)
+                });
 
+                io.emit('app-url', {data: error});
+                //Пишем в бд ошибку (с описанием)
                 let msg = new ErrorData({text: err})
                 msg.save(function (err) {
                     if (err) console.log(err)
