@@ -76,23 +76,25 @@ class FileList extends Component {
                     <div style={{background: 'rgba(255, 255, 255, 0.5)'}}>
                         <List dense className='fileList'>
                             {this.state.files.map(file =>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <FolderIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={<a href={file.title} className='fileName' download>{file.title.split('/').reverse()[0]}</a>}
-                                        secondary={<span> Урлов: {file.count}</span>}
-                                    />
-                                    <ListItemSecondaryAction>
-                                        <Checkbox
-                                            onChange={this.handleToggle(file)}
-                                            checked={this.state.checked.indexOf(file) !== -1}
+                                <div key={file.title} style={{margin: 0, padding: 0}}>
+                                    <ListItem>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <FolderIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={<a href={file.title} className='fileName' download>{file.title.split('/').reverse()[0]}</a>}
+                                            secondary={<span> Урлов: {file.count}</span>}
                                         />
-                                    </ListItemSecondaryAction>
-                                </ListItem>,
+                                        <ListItemSecondaryAction>
+                                            <Checkbox
+                                                onChange={this.handleToggle(file)}
+                                                checked={this.state.checked.indexOf(file) !== -1}
+                                            />
+                                        </ListItemSecondaryAction>
+                                    </ListItem>
+                                </div>
                             )}
                         </List>
                     </div>

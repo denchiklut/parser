@@ -34,6 +34,7 @@ class Home extends Component {
 
         const getLogs = (log) => {
             this.setState({logs: [...this.state.logs, log.data]});
+            console.log('logs', this.state.logs)
         }
 
     }
@@ -49,7 +50,7 @@ class Home extends Component {
             .get('/api/logs')
             .then(res => {
                 if (res.data.data.length > 0 ) {
-                    res.data.data.map(item => {
+                    res.data.data.forEach(item => {
                         this.setState({logs: [...this.state.logs, item.log]});
                     })
                 }
@@ -59,7 +60,7 @@ class Home extends Component {
             .get('/api/logFile')
             .then(res => {
                 if (res.data.data.length > 0 ) {
-                    res.data.data.map(item => {
+                    res.data.data.forEach(item => {
                         let obj = {title: item.title, count: item.size}
                         this.setState({files: [...this.state.files, obj]});
                     })

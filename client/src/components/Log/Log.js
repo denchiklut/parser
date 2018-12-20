@@ -32,7 +32,7 @@ class Log extends Component {
                 </AppBar>
                 <ul className='LogList'>
                     {this.state.logs.map(log =>
-                        <li>{log} </li>
+                        <li key={log}>{log} </li>
                     )}
                 </ul>
             </div>
