@@ -23,6 +23,8 @@ class Settings extends Component {
     render() {
         return (
             <div className='SettingsApp'>
+                <Grid container spacing={24} style={{width: '100%', margin: 0}}>
+                    <Grid item xs={12}>
                 <div className="settings-body">
                     <Grid container spacing={24} style={{width: '100%', margin: 0}}>
                         <Grid item xs={12}>
@@ -104,6 +106,8 @@ class Settings extends Component {
                         </Grid>
                     </Grid>
                 </div>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
