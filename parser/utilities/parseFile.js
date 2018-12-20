@@ -51,7 +51,7 @@ exports.parseFile = (rootDir, item, io) => {
                     if (err) console.log(err)
                 });
 
-                io.emit('app-url', {data: log});
+                io.emit('app-url', {data: log})
 
                 //Пишем в БД результаты работы парсера
                 let msg = new PageData({pageData: result})
@@ -69,7 +69,7 @@ exports.parseFile = (rootDir, item, io) => {
                     if (err) console.log(err)
                 });
 
-                io.emit('app-url', {data: error});
+                io.emit('app-url', {data: error})
                 //Пишем в бд ошибку (с описанием)
                 let msg = new ErrorData({text: err})
                 msg.save(function (err) {

@@ -23,7 +23,7 @@ io.on('connection', socket => {
 app.post('/api/parser', jsonParser, (req, res) => {
     if (!req.body) return res.sendStatus(400)
     if (req.body.status === 'start') {
-        res.json({msg: 'We are starting parser'})
+        res.json({msg: true})
         StatusData.remove({}, function(err) {
             if (err) console.log(err)
             console.log('statusData collection removed')
@@ -36,9 +36,16 @@ app.post('/api/parser', jsonParser, (req, res) => {
             if (err) console.log(err)
             console.log('logFile collection removed')
         });
+
+        let logData = new LogData({log: 'We are stopping parser'})
+        logData.save(function (err) {
+            if (err) console.log(err)
+        });
         parseFn(__dirname, io)
     } else {
-        res.json({msg: 'We are stopping parser'})
+        io.emit('app-url', {data: 'We are stopping parser'});
+        res.json({msg: false})
+
     }
 })
 

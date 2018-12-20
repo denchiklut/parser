@@ -13,7 +13,6 @@ class Home extends Component {
 
         this.state = {
             isStart: false,
-            log: null,
             socket: null,
             logs: [],
             files: []
@@ -102,10 +101,9 @@ class Home extends Component {
             .post(`/api/parser`, {status: this.state.isStart ? 'stop' : 'start'})
             .then(res => {
                 let log = res.data.msg
-                this.setState({log})
 
-                if (this.state.isStart) {
-                    this.setState({logs: []})
+                if (log === true) {
+                    this.setState({logs: ['We are starting parser']})
                     this.setState({files: []})
                 }
             })
