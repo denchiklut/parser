@@ -34,7 +34,6 @@ class Home extends Component {
 
         const getLogs = (log) => {
             this.setState({logs: [...this.state.logs, log.data]});
-            console.log('logs', this.state.logs)
         }
 
     }
@@ -104,6 +103,7 @@ class Home extends Component {
                 let log = res.data.msg
 
                 if (log === true) {
+                    this.setState({logs: []})
                     this.setState({logs: ['We are starting parser']})
                     this.setState({files: []})
                 }

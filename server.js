@@ -36,14 +36,14 @@ app.post('/api/parser', jsonParser, (req, res) => {
             if (err) console.log(err)
             console.log('logFile collection removed')
         });
+        parseFn(__dirname, io)
+    } else {
+        io.emit('app-url', {data: 'We are stopping parser'});
 
         let logData = new LogData({log: 'We are stopping parser'})
         logData.save(function (err) {
             if (err) console.log(err)
         });
-        parseFn(__dirname, io)
-    } else {
-        io.emit('app-url', {data: 'We are stopping parser'});
         res.json({msg: false})
 
     }
