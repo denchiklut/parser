@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer')
 const xml2js = require('xml2js')
-// const proxyList = require('./proxy').proxyList
 const fs = require('fs')
 const https = require('https');
 const PageData = require('../../config').pageData
@@ -15,7 +14,8 @@ exports.parseFile = (rootDir, item, io) => {
 
     parser.parseString(content, (err, result) => {
         //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
-        let arr = result.urlset.url.slice(185, 186)
+        // let arr = result.urlset.url.slice(185, 186)
+        let arr = result.urlset.url
 
         //Пишем в БД лог файлов с урлами
         let logFileData = new LogFileData({title: `${rootDir}/${item}`, size: `${result.urlset.url.length}`})
@@ -28,7 +28,6 @@ exports.parseFile = (rootDir, item, io) => {
         arr.forEach(async (item) => {
 
             try {
-                // let proxyUrl = proxyList[Math.floor(Math.random()*proxyList.length)];
                 let proxyUrl = '';
 
                 await https.get('https://api.getproxylist.com/proxy', (resp) => {
