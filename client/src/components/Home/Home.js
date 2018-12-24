@@ -22,10 +22,12 @@ class Home extends Component {
 
         this.socket.on('app', function(data){
             getFiles(data)
+            console.log(data)
         });
 
         this.socket.on('app-url', function(data){
             getLogs(data)
+            console.log(data)
         });
 
         const getFiles = (file) => {

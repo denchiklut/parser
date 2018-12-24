@@ -1,7 +1,8 @@
 const puppeteer = require('puppeteer')
 const xml2js = require('xml2js')
-const proxyList = require('./proxy').proxyList
+// const proxyList = require('./proxy').proxyList
 const fs = require('fs')
+const https = require('https');
 const PageData = require('../../config').pageData
 const ErrorData = require('../../config').errorData
 const LogData = require('../../config').logData
@@ -14,7 +15,7 @@ exports.parseFile = (rootDir, item, io) => {
 
     parser.parseString(content, (err, result) => {
         //Для теста обрезаем массив чтобы парсить 12 сайтов вместо всех
-        let arr = result.urlset.url.slice(180, 181)
+        let arr = result.urlset.url.slice(185, 186)
 
         //Пишем в БД лог файлов с урлами
         let logFileData = new LogFileData({title: `${rootDir}/${item}`, size: `${result.urlset.url.length}`})
@@ -24,10 +25,31 @@ exports.parseFile = (rootDir, item, io) => {
 
         io.emit('app', {data: {title: `${rootDir}/${item}`, count: `${result.urlset.url.length}`}});
 
-        arr.forEach( async (item) => {
+        arr.forEach(async (item) => {
 
             try {
-                let proxyUrl = proxyList[Math.floor(Math.random()*proxyList.length)];
+                // let proxyUrl = proxyList[Math.floor(Math.random()*proxyList.length)];
+                let proxyUrl = '';
+
+                await https.get('https://api.getproxylist.com/proxy', (resp) => {
+                    let data = '';
+
+                    // A chunk of data has been recieved.
+                    resp.on('data', (chunk) => {
+                        data += chunk
+                    })
+
+                    // The whole response has been received. Print out the result.
+                    resp.on('end', () => {
+                        console.log(`${JSON.parse(data).ip}: ${JSON.parse(data).port}`)
+                        proxyUrl = `${JSON.parse(data).ip}: ${JSON.parse(data).port}`
+                    })
+
+                }).on("error", (err) => {
+                    console.log("Error: " + err.message)
+                })
+
+
                 const browser = await puppeteer.launch({
                     args: [`--proxy-server=${proxyUrl}`],
                 })
@@ -41,7 +63,8 @@ exports.parseFile = (rootDir, item, io) => {
                         site: document.location.href,
                         title: document.title,
                         description: document.head.querySelector("[name~=description][content]").content,
-                        keywords: document.head.querySelector("[name~=keywords][content]").content}
+                        keywords: document.head.querySelector("[name~=keywords][content]").content
+                    }
                 })
 
                 let log = `--- SUCCESS ---: ${item.loc[0]}`
@@ -62,7 +85,7 @@ exports.parseFile = (rootDir, item, io) => {
 
             } catch (err) {
 
-                let error =`---  ERROR ---: ${item.loc[0]}`
+                let error = `---  ERROR ---: ${item.loc[0]}`
                 //Пишем в БД лог ошибки
                 let errorData = new LogData({log: error})
                 errorData.save(function (err) {
